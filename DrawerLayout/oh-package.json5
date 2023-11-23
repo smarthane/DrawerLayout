@@ -1,9 +1,23 @@
 {
-  "name": "drawerlayout",
-  "version": "1.0.0",
-  "description": "抽屉布局",
-  "main": "index.ets",
-  "author": "smarthane",
   "license": "Apache-2.0",
+  "devDependencies": {},
+  "author": {
+    "name": "smarthane",
+  },
+  "keywords": [
+    "OpenHarmony",
+    "HarmonyOS",
+    "Drawer",
+    "DrawerLayout",
+    "SlideLayout"
+  ],
+  "name": "@smarthane/drawerlayout",
+  "description": "基于HarmonyOS ArkTS 抽屉布局",
+  "main": "index.ets",
+  "ohos": {
+    "org": "opensource"
+  },
+  "repository": "https://gitee.com/smarthane/drawerlayout",
+  "version": "1.0.0",
   "dependencies": {}
 }

@@ -2,8 +2,8 @@ import display from '@ohos.display';
 
 /**
  * ***********************************************
- *
- *
+ * @author smarthane
+ * https://gitee.com/smarthane/drawerlayout
  * ************************************************
  */
 namespace DrawerLayout {

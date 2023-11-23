@@ -7,7 +7,7 @@ struct IndexPage {
     Row() {
       Column() {
 
-        Button('自定义组件实现方式')
+        Button('DrawerLayout 实现方式')
           .fontSize(18)
           .fontWeight(FontWeight.Bold).onClick(() => {
           router.pushUrl({

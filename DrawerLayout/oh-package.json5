@@ -1,0 +1,9 @@
+{
+  "name": "drawerlayout",
+  "version": "1.0.0",
+  "description": "抽屉布局",
+  "main": "index.ets",
+  "author": "smarthane",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}

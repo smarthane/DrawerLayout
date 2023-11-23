@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "DrawerLayout",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

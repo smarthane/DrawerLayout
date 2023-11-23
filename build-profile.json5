@@ -1,0 +1,45 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\Administrator\\.ohos\\config\\auto_debug_DrawerLayout_me.smarthane.ohos.drawerlayout_33326640.cer",
+          "storePassword": "0000001AABEDAC7CF4C77BD5185C81DDC5DDC60EF8571160DAEAD63979235F954398F14C173CCF5C9632",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001A73EF9A85B97372CB903272D253EF5458837FF828E24396BE21F370CD8426E9DE9E6A487C92AF",
+          "profile": "C:\\Users\\Administrator\\.ohos\\config\\auto_debug_DrawerLayout_me.smarthane.ohos.drawerlayout_33326640.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\Administrator\\.ohos\\config\\auto_debug_DrawerLayout_me.smarthane.ohos.drawerlayout_33326640.p12"
+        }
+      }
+    ],
+    "compileSdkVersion": 9,
+    "compatibleSdkVersion": 9,
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DrawerLayout",
+      "srcPath": "./DrawerLayout"
+    }
+  ]
+}

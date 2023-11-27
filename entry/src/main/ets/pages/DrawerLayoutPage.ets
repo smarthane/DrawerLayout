@@ -4,12 +4,14 @@ import DrawerLayout from 'drawerlayout/src/main/ets/components/DrawerLayout';
 @Component
 struct DrawerLayoutPage {
   @State model: DrawerLayout.Model = new DrawerLayout.Model()
+    // 设置左侧边栏DrawerLayout.Type.LEFT 还是右侧边栏DrawerLayout.Type.RIGHT
     .setDrawerType(DrawerLayout.Type.LEFT)
+    // 设置侧边栏宽度
     .setDrawerWidth(230);
 
   build() {
     Column() {
-      DrawerLayout.Drawer({
+      DrawerLayout({
         model: $model,
         drawerView: () => {
           this.buildDrawerView();

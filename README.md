@@ -1,37 +1,147 @@
 # DrawerLayout
 
-#### 介绍
-基于HarmonyOS ArkTS 抽屉布局
+## 简介
+> DrawerLayout 基于HarmonyOS ArkTS 抽屉布局。
 
-#### 软件架构
-软件架构说明
+![operation.gif](screenshots/operation.gif)
 
+## 下载安装
+```shell
+ohpm install @ohos/drawer-layout
+```
 
-#### 安装教程
+## 使用说明
+1. 引入文件及代码依赖
+ ```
+    import { DrawerLayout } from '@ohos/drawer-layout'
+ ```
+2. 使用步骤说明
+ ```
+   （1） 创建model
+    @State model: DrawerLayout.Model = new DrawerLayout.Model()
+   （2） 创建DrawerLayout
+    DrawerLayout({
+        // 绑定Model
+        model: $model,
+        // 侧边栏布局页面
+        drawerView: () => {
+          this.buildDrawerView();
+        },
+        // 内容布局页面
+        contentView: () => {
+          this.buildContentView();
+        }
+      })
+   （3）model方法说明 
+    //打开抽屉
+    this.model.openDrawer()
+    //关闭抽屉
+    this.model.closeDrawer()
+    //打开或者关闭抽屉
+    this.model.openOrCloseDrawer()
+ ```
+3. 使用示例
+ ```
+    @Entry
+    @Component
+    struct DrawerLayoutPage {
+      @State model: DrawerLayout.Model = new DrawerLayout.Model()
+        // 设置左侧边栏DrawerLayout.Type.LEFT 还是右侧边栏DrawerLayout.Type.RIGHT【默认为左侧】
+        .setDrawerType(DrawerLayout.Type.LEFT)
+        // 设置侧边栏宽度【默认为260】
+        .setDrawerWidth(230);
+    
+      build() {
+        Column() {
+          DrawerLayout({
+            model: $model,
+            drawerView: () => {
+              this.buildDrawerView();
+            },
+            contentView: () => {
+              this.buildContentView();
+            }
+          })
+        }
+        .height('100%')
+      }
+    
+      @Builder buildContentView() {
+        Column() {
+          Text('这是内容项')
+            .fontSize(30)
+            .fontWeight(FontWeight.Bold)
+    
+          Button(this.model.isDrawerOpen ? '关闭侧边栏' : '打开侧边栏')
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .margin({ top: 30 })
+            .onClick(() => {
+              this.model.openOrCloseDrawer();
+            })
+    
+          Text(this.model.drawerType == DrawerLayout.Type.LEFT ? '当前为左侧边栏' : '当前为右侧边栏')
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .margin({ top: 30 })
+    
+          Button(this.model.drawerType == DrawerLayout.Type.LEFT ? '切换为右侧边栏' : '切换为左侧边栏')
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .margin({ top: 10 })
+            .onClick(() => {
+              this.model.setDrawerType(this.model.drawerType == DrawerLayout.Type.LEFT ?  DrawerLayout.Type.RIGHT : DrawerLayout.Type.LEFT)
+            })
+        }
+        .justifyContent(FlexAlign.Center)
+        .width('100%')
+        .height('100%')
+      }
+    
+      @Builder buildDrawerView() {
+        Column() {
+          if (this.model.drawerType == DrawerLayout.Type.LEFT) {
+            Text('这是左边抽屉项\n1.可左右滑动\n2.点击遮罩层关闭')
+              .fontSize(30)
+              .fontWeight(FontWeight.Bold)
+          } else {
+            Text('这是右边抽屉项\n1.可左右滑动\n2.点击遮罩层关闭')
+              .fontSize(30)
+              .fontWeight(FontWeight.Bold)
+          }
+        }
+        .backgroundColor(Color.Orange)
+        .justifyContent(FlexAlign.Center)
+        .width('100%')
+        .height('100%')
+      }
+    }
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+ ```
 
-#### 使用说明
+## 接口说明
+`@State DrawerLayout.Model = new DrawerLayout.Model();`
+1. 设置侧边栏宽度【默认为260】`model.setDrawerWidth()`
+2. 设置左、右侧边栏【默认为左侧】`model.setDrawerType()`
+3. 打开抽屉`model.openDrawer()`
+4. 关闭抽屉`model.closeDrawer()`
+5. 打开或者关闭抽屉`model.openOrCloseDrawer()`
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+## 目录结构
+````
+|---- DrawerLayout
+|     |---- entry  # 示例代码文件夹
+|     |---- DrawerLayout  # DrawerLayout库文件夹
+|           |---- index.ets  # 对外接口
+|           |---- src
+|                 |---- main
+|                       |---- components
+|                             |---- DrawerLayout.ets  # 自定义组件类
+|     |---- README.md  # 安装使用方法                    
+````
 
-#### 参与贡献
+## 贡献代码
+使用过程中发现任何问题都可以提 [Issue](https://gitee.com/smarthane/drawerlayout/issues) 给我们，当然，我们也非常欢迎你给我们发 [PR](https://gitee.com/openharmony-sig/material-dialogs/pulls) 。
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## 开源协议
+本项目基于 [ Apache License 2.0](https://gitee.com/smarthane/drawerlayout/blob/master/LICENSE) ，请自由地享受和参与开源。

@@ -9,6 +9,16 @@ struct DrawerLayoutPage {
     // 设置侧边栏宽度
     .setDrawerWidth(230);
 
+  aboutToAppear() {
+    this.model.setDrawerCallback((drawerType, isOpen) => {
+      console.debug(`drawerType: ${drawerType}, isOpen: ${isOpen}`)
+      // D 0FEFE/JsApp: drawerType: 1, isOpen: true
+      // D 0FEFE/JsApp: drawerType: 1, isOpen: false
+      // D 0FEFE/JsApp: drawerType: 2, isOpen: true
+      // D 0FEFE/JsApp: drawerType: 2, isOpen: false
+    })
+  }
+
   build() {
     Column() {
       DrawerLayout({
@@ -68,7 +78,7 @@ struct DrawerLayoutPage {
           .fontWeight(FontWeight.Bold)
       }
     }
-    .backgroundColor(Color.Orange)
+    .backgroundColor(this.model.drawerType == DrawerLayout.Type.LEFT ? Color.Orange : Color.Green)
     .justifyContent(FlexAlign.Center)
     .width('100%')
     .height('100%')

@@ -1,4 +1,6 @@
 import display from '@ohos.display';
+import mediaquery from '@ohos.mediaquery'
+import window from '@ohos.window';
 
 /**
  * ***********************************************
@@ -6,15 +8,43 @@ import display from '@ohos.display';
  * https://gitee.com/smarthane/drawerlayout
  * ************************************************
  */
-
 @Component
 export struct DrawerLayout {
   @Link model: DrawerLayout.Model
   @BuilderParam drawerView?: () => any
   @BuilderParam contentView?: () => any
 
+  // 当设备横屏时条件成立
+  private mediaqueryListener = mediaquery.matchMediaSync('(orientation: landscape)');
+
   aboutToAppear() {
-    this.model.displayWidth = DrawerLayout.Utils.getDeviceWidth(this.model.deviceDpi);
+    // 获取状态栏高度
+    window.getLastWindow(getContext(this)).then((data: window.Window) => {
+      // 状态栏高度
+      this.model.statusBarHeight = DrawerLayout.Utils.toVp(data.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM).topRect.height);
+      // 初始化数据
+      this.initData();
+      // 绑定回调函数 绑定当前应用实例
+      this.mediaqueryListener.on('change', this.onPortrait.bind(this));
+    })
+  }
+
+  aboutToDisappear() {
+    this.mediaqueryListener.off('change')
+  }
+
+  // 当满足媒体查询条件时，触发回调
+  private onPortrait(mediaQueryResult) {
+    this.model.isScreenPortrait = !mediaQueryResult.matches;
+    if (this.model.onScreenPortraitCallback) {
+      this.model.onScreenPortraitCallback(!mediaQueryResult.matches)
+    }
+    this.initData();
+    console.debug(`onPortrait: ${JSON.stringify(mediaQueryResult)} , displayWidth: ${this.model.displayWidth}, displayHeight: ${this.model.displayHeight}, statusBarHeight: ${this.model.statusBarHeight}`);
+  }
+
+  private initData() {
+    this.model.displayWidth = DrawerLayout.Utils.getDeviceWidth(this.model.deviceDpi) - (this.model.isScreenPortrait ? 0 : this.model.statusBarHeight);
     this.model.displayHeight = DrawerLayout.Utils.getDeviceHeight(this.model.deviceDpi);
     // 设置侧边栏的宽度 [0,displayWidth]
     if (this.model.drawerWidth > this.model.displayWidth) {
@@ -31,6 +61,10 @@ export struct DrawerLayout {
         break;
       case DrawerLayout.Type.RIGHT:
         this.model.drawerOffsetX = this.model.displayWidth;
+        // 右边侧边栏需要特殊处理
+        if (this.model.isDrawerOpen) {
+          this.model.drawerPositionX = this.model.drawerOffsetWidth;
+        }
         break;
     }
   }
@@ -110,7 +144,7 @@ export struct DrawerLayout {
                 }
                 break;
               case DrawerLayout.Type.RIGHT:
-                let tempS = (this.model.drawerPositionX + event.offsetX) / 1.18;
+                let tempS = (this.model.drawerPositionX + event.offsetX) / 1.188;
                 if (tempS < this.model.drawerOffsetWidth) {
                   this.model.drawerPositionX = this.model.drawerOffsetWidth;
                 } else if (this.model.drawerOffsetWidth <= tempS && tempS <= this.model.displayWidth) {
@@ -167,6 +201,8 @@ export namespace DrawerLayout {
     displayHeight: number = 0;
     // 设备DPI
     deviceDpi: number = Utils.DEVICE_DPI;
+    // 设备状态栏高度
+    statusBarHeight: number = 0;
 
     // 抽屉类型枚举
     drawerType: Type = Type.LEFT;
@@ -189,6 +225,15 @@ export namespace DrawerLayout {
     maskOpacity: number = 0.68;
     // 遮罩层颜色
     maskColor: Color | string | number = Color.Black;
+
+    // 屏幕是否为竖屏
+    isScreenPortrait: boolean = true;
+
+    // 回调函数
+    drawerCallback: (drawerType: Type, isOpen: boolean) => void = () => {};
+    // 屏幕横竖屏切换 竖屏为true,横屏为false
+    onScreenPortraitCallback: (isPortrait: boolean) => void = () => {};
+
 
     setDrawerType(mDrawerType: Type): Model {
       this.drawerType = mDrawerType;
@@ -250,6 +295,16 @@ export namespace DrawerLayout {
       return this;
     }
 
+    setDrawerCallback(callback: (drawerType: Type, isOpen: boolean) => void): Model {
+      this.drawerCallback = callback
+      return this
+    }
+
+    setScreenPortraitCallback(callback: (isPortrait: boolean) => void): Model {
+      this.onScreenPortraitCallback = callback
+      return this
+    }
+
     /**
      * 打开抽屉
      */
@@ -263,6 +318,9 @@ export namespace DrawerLayout {
           break;
       }
       this.isDrawerOpen = true;
+      if (this.drawerCallback) {
+        this.drawerCallback(this.drawerType, true);
+      }
     }
 
     /**
@@ -278,6 +336,9 @@ export namespace DrawerLayout {
           break;
       }
       this.isDrawerOpen = false;
+      if (this.drawerCallback) {
+        this.drawerCallback(this.drawerType, false);
+      }
     }
 
     /**
@@ -293,6 +354,9 @@ export namespace DrawerLayout {
           this.drawerPositionX = this.drawerPositionX === this.drawerOffsetWidth ? this.displayWidth : this.drawerOffsetWidth;
           this.isDrawerOpen = this.drawerPositionX === this.drawerOffsetWidth
           break;
+      }
+      if (this.drawerCallback) {
+        this.drawerCallback(this.drawerType, this.isDrawerOpen);
       }
     }
   }
@@ -334,6 +398,18 @@ export namespace DrawerLayout {
       let screenPixelWidth = displayObject.width;
       let screenDensityDPI = displayObject.densityDPI;
       return screenPixelWidth * ((dpi == null ? this.DEVICE_DPI : dpi) / screenDensityDPI);
+    }
+
+    /**
+     * 转换VP
+     * @param width
+     * @param dpi
+     * @returns
+     */
+    public static toVp(width: number, dpi?: number): number {
+      let displayObject = display.getDefaultDisplaySync();
+      let screenDensityDPI = displayObject.densityDPI;
+      return width * ((dpi == null ? this.DEVICE_DPI : dpi) / screenDensityDPI);
     }
   }
 }

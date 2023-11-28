@@ -7,13 +7,21 @@ struct IndexPage {
     Row() {
       Column() {
 
-        Button('DrawerLayout 实现方式')
+        Button('DrawerLayout 实现方式（左或者右）')
           .fontSize(18)
           .fontWeight(FontWeight.Bold).onClick(() => {
           router.pushUrl({
             url: 'pages/DrawerLayoutPage'
           })
         })
+
+        Button('DrawerLayout 实现方式（包含左右）')
+          .fontSize(18)
+          .fontWeight(FontWeight.Bold).onClick(() => {
+          router.pushUrl({
+            url: 'pages/DrawerLayoutPage2'
+          })
+        }).margin({ top: 10 })
 
         Button('SideBarContainer 实现方式')
           .fontSize(18)

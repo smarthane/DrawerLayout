@@ -21,7 +21,9 @@ export struct DrawerLayout {
     // 获取状态栏高度
     window.getLastWindow(getContext(this)).then((data: window.Window) => {
       // 状态栏高度
-      this.model.statusBarHeight = DrawerLayout.Utils.toVp(data.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM).topRect.height);
+      this.model.statusBarHeight = DrawerLayout.Utils.toVp(data.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
+        .topRect
+        .height);
       // 初始化数据
       this.initData();
       // 绑定回调函数 绑定当前应用实例
@@ -40,7 +42,6 @@ export struct DrawerLayout {
       this.model.onScreenPortraitCallback(!mediaQueryResult.matches)
     }
     this.initData();
-    console.debug(`onPortrait: ${JSON.stringify(mediaQueryResult)} , displayWidth: ${this.model.displayWidth}, displayHeight: ${this.model.displayHeight}, statusBarHeight: ${this.model.statusBarHeight}`);
   }
 
   private initData() {
@@ -61,7 +62,7 @@ export struct DrawerLayout {
         break;
       case DrawerLayout.Type.RIGHT:
         this.model.drawerOffsetX = this.model.displayWidth;
-        // 右边侧边栏需要特殊处理
+      // 右边侧边栏需要特殊处理 横竖屏切换时
         if (this.model.isDrawerOpen) {
           this.model.drawerPositionX = this.model.drawerOffsetWidth;
         }
@@ -144,7 +145,8 @@ export struct DrawerLayout {
                 }
                 break;
               case DrawerLayout.Type.RIGHT:
-                let tempS = (this.model.drawerPositionX + event.offsetX) / 1.188;
+                let tempO = this.model.isScreenPortrait ? 1.188 : 1.101;
+                let tempS = (this.model.drawerPositionX + event.offsetX) / tempO;
                 if (tempS < this.model.drawerOffsetWidth) {
                   this.model.drawerPositionX = this.model.drawerOffsetWidth;
                 } else if (this.model.drawerOffsetWidth <= tempS && tempS <= this.model.displayWidth) {
@@ -182,9 +184,9 @@ export struct DrawerLayout {
 
 export namespace DrawerLayout {
 
-  /**
-   * 抽屉类型 左 右
-   */
+/**
+ * 抽屉类型 左 右
+ */
   export enum Type {
     LEFT = 1,
     RIGHT = 2,
@@ -230,10 +232,11 @@ export namespace DrawerLayout {
     isScreenPortrait: boolean = true;
 
     // 回调函数
-    drawerCallback: (drawerType: Type, isOpen: boolean) => void = () => {};
+    drawerCallback: (drawerType: Type, isOpen: boolean) => void = () => {
+    };
     // 屏幕横竖屏切换 竖屏为true,横屏为false
-    onScreenPortraitCallback: (isPortrait: boolean) => void = () => {};
-
+    onScreenPortraitCallback: (isPortrait: boolean) => void = () => {
+    };
 
     setDrawerType(mDrawerType: Type): Model {
       this.drawerType = mDrawerType;

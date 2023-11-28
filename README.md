@@ -3,7 +3,7 @@
 ## 简介
 > DrawerLayout 基于HarmonyOS ArkTS 抽屉布局。
 
-![operation.gif](screenshots/operation.gif)
+![operation.gif](screenshots/operation2.gif)
 
 ## 下载安装
 ```shell

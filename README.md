@@ -7,13 +7,13 @@
 
 ## 下载安装
 ```shell
-ohpm install @ohos/drawer-layout
+ohpm install @smarthane/drawer-layout
 ```
 
 ## 使用说明
 1. 引入文件及代码依赖
  ```
-    import { DrawerLayout } from '@ohos/drawer-layout'
+    import { DrawerLayout } from '@smarthane/drawer-layout'
  ```
 2. 使用步骤说明
  ```
@@ -21,13 +21,13 @@ ohpm install @ohos/drawer-layout
     @State model: DrawerLayout.Model = new DrawerLayout.Model()
    （2） 创建DrawerLayout
     DrawerLayout({
-        // 绑定Model
+        // 1.绑定Model
         model: $model,
-        // 侧边栏布局页面
+        // 2.侧边栏布局页面
         drawerView: () => {
           this.buildDrawerView();
         },
-        // 内容布局页面
+        // 3.内容布局页面
         contentView: () => {
           this.buildContentView();
         }
@@ -42,6 +42,8 @@ ohpm install @ohos/drawer-layout
  ```
 3. 使用示例
  ```
+    详细可以参考工程entry模块下面的示例代码。
+
     @Entry
     @Component
     struct DrawerLayoutPage {
@@ -50,6 +52,15 @@ ohpm install @ohos/drawer-layout
         .setDrawerType(DrawerLayout.Type.LEFT)
         // 设置侧边栏宽度【默认为260】
         .setDrawerWidth(230);
+    
+      // 用于判断手机的物理返回按钮
+      onBackPress() {
+        if (this.model.isDrawerOpen) {
+          this.model.closeDrawer();
+          return true;
+        }
+        return false;
+      }
     
       build() {
         Column() {

@@ -5,6 +5,8 @@ import window from '@ohos.window';
 /**
  * ***********************************************
  * @author smarthane
+ * DrawerLayout 左右抽屉布局，侧边栏布局
+ * 提供侧边栏可以显示和隐藏的侧边栏容器，通过子组件定义侧边栏和内容区。
  * https://gitee.com/smarthane/drawerlayout
  * ************************************************
  */
@@ -231,7 +233,7 @@ export namespace DrawerLayout {
     // 屏幕是否为竖屏
     isScreenPortrait: boolean = true;
 
-    // 回调函数
+    // 侧边栏打开关闭状态回调函数
     drawerCallback: (drawerType: Type, isOpen: boolean) => void = () => {
     };
     // 屏幕横竖屏切换 竖屏为true,横屏为false

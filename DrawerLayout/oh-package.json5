@@ -11,7 +11,7 @@
     "DrawerLayout",
     "SlideLayout"
   ],
-  "name": "@smarthane/drawerlayout",
+  "name": "@smarthane/drawer-layout",
   "description": "基于HarmonyOS ArkTS 抽屉布局",
   "main": "index.ets",
   "ohos": {

@@ -19,6 +19,15 @@ struct DrawerLayoutPage {
     })
   }
 
+  // 用于判断手机的物理返回按钮
+  onBackPress() {
+    if (this.model.isDrawerOpen) {
+      this.model.closeDrawer();
+      return true;
+    }
+    return false;
+  }
+
   build() {
     Column() {
       DrawerLayout({

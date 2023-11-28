@@ -3,12 +3,13 @@ import mediaquery from '@ohos.mediaquery'
 import window from '@ohos.window';
 
 /**
- * ***********************************************
+ * *********************************************************
  * @author smarthane
- * DrawerLayout 左右抽屉布局，侧边栏布局
- * 提供侧边栏可以显示和隐藏的侧边栏容器，通过子组件定义侧边栏和内容区。
+ * @version v1.0.0
+ * DrawerLayout 左右抽屉布局，侧边栏布局。
+ * 提供侧边栏可以显示和隐藏的侧边栏布局组件，通过子组件定义侧边栏和内容区。
  * https://gitee.com/smarthane/drawerlayout
- * ************************************************
+ * **********************************************************
  */
 @Component
 export struct DrawerLayout {

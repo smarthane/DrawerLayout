@@ -1,12 +1,22 @@
-import DrawerLayout from 'drawerlayout/src/main/ets/components/DrawerLayout';
+import { DrawerLayout } from '@smarthane/drawer-layout';
 
+/**
+ * *********************************************************
+ * @author smarthane
+ * @version v1.0.0
+ * DrawerLayout 左右抽屉布局，侧边栏布局。
+ * 提供侧边栏可以显示和隐藏的侧边栏布局组件，通过子组件定义侧边栏和内容区。
+ * https://github.com/smarthane/DrawerLayout
+ * https://gitee.com/smarthane/drawerlayout
+ * **********************************************************
+ */
 @Entry
 @Component
 struct DrawerLayoutPage {
   @State model: DrawerLayout.Model = new DrawerLayout.Model()
     // 设置左侧边栏DrawerLayout.Type.LEFT 还是右侧边栏DrawerLayout.Type.RIGHT
     .setDrawerType(DrawerLayout.Type.LEFT)
-    // 设置侧边栏宽度
+      // 设置侧边栏宽度
     .setDrawerWidth(230);
 
   aboutToAppear() {
@@ -67,7 +77,7 @@ struct DrawerLayoutPage {
         .fontWeight(FontWeight.Bold)
         .margin({ top: 10 })
         .onClick(() => {
-          this.model.setDrawerType(this.model.drawerType == DrawerLayout.Type.LEFT ?  DrawerLayout.Type.RIGHT : DrawerLayout.Type.LEFT)
+          this.model.setDrawerType(this.model.drawerType == DrawerLayout.Type.LEFT ? DrawerLayout.Type.RIGHT : DrawerLayout.Type.LEFT)
         })
     }
     .justifyContent(FlexAlign.Center)

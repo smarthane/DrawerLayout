@@ -3,10 +3,10 @@
   "devDependencies": {},
   "author": "",
   "name": "entry",
-  "description": "Please describe the basic information.",
+  "description": "DrawerLayout使用示例.",
   "main": "",
   "version": "1.0.0",
   "dependencies": {
-    "drawerlayout": "file:../DrawerLayout"
+    "@smarthane/drawer-layout": "file:../DrawerLayout"
   }
 }

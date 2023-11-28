@@ -1,5 +1,15 @@
-import DrawerLayout from 'drawerlayout/src/main/ets/components/DrawerLayout';
+import { DrawerLayout } from '@smarthane/drawer-layout';
 
+/**
+ * *********************************************************
+ * @author smarthane
+ * @version v1.0.0
+ * DrawerLayout 左右抽屉布局，侧边栏布局。
+ * 提供侧边栏可以显示和隐藏的侧边栏布局组件，通过子组件定义侧边栏和内容区。
+ * https://github.com/smarthane/DrawerLayout
+ * https://gitee.com/smarthane/drawerlayout
+ * **********************************************************
+ */
 @Entry
 @Component
 struct DrawerLayoutPage2 {

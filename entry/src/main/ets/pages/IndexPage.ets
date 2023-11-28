@@ -1,5 +1,11 @@
 import router from '@ohos.router'
 
+/**
+ * *********************************************************
+ * @author smarthane
+ * @version v1.0.0
+ * **********************************************************
+ */
 @Entry
 @Component
 struct IndexPage {

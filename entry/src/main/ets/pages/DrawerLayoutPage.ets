@@ -96,6 +96,10 @@ struct DrawerLayoutPage {
           .fontSize(30)
           .fontWeight(FontWeight.Bold)
       }
+      Image($r('app.media.icon'))
+        .width(45)
+        .height(45)
+        .margin({ left: 20 })
     }
     .backgroundColor(this.model.drawerType == DrawerLayout.Type.LEFT ? Color.Orange : Color.Green)
     .justifyContent(FlexAlign.Center)

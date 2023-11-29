@@ -114,7 +114,8 @@ export struct DrawerLayout {
         this.drawerView()
         /* ****************************************/
       }
-      .width(this.model.isDrawerViewVisible ? this.model.drawerWidth : 0)
+      //.visibility(this.model.isDrawerViewVisible ? Visibility.Visible : Visibility.Hidden)
+      .width(this.model.drawerWidth)
       .height('100%')
       .position({ x: this.model.drawerPositionX, y: 0 })
       .animation({
@@ -180,6 +181,7 @@ export struct DrawerLayout {
             }
           })
       )
+      .opacity(this.model.isDrawerViewVisible ? 1 : 0)
     }
     .width(DrawerLayout.Utils.MATCH_PARENT)
     .height(DrawerLayout.Utils.MATCH_PARENT)
@@ -217,7 +219,7 @@ export namespace DrawerLayout {
     // 滑动多少距离触发动画
     drawerOffsetX: number = -1 * this.drawerWidth / 3;
     // 滑动动画时长
-    drawerAnimDuration: number = 160;
+    drawerAnimDuration: number = 130;
     // 侧边栏是否显示 解决首次打开时会加载显示侧边栏问题
     isDrawerViewVisible: boolean = false;
     // 侧边栏是否打开

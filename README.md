@@ -150,7 +150,7 @@ ohpm install @smarthane/drawer-layout
 |                             |---- DrawerLayout.ets  # 自定义组件类
 |     |---- README.md  # 安装使用方法                    
 ````
-## 运行
+## 运行示例
 本工程[entry]示例如需要运行在真机，需要替换build-profile.json5文件中的signingConfigs
 [为应用/服务进行签名](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/signing-0000001587684945-V2)
 

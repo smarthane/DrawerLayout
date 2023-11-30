@@ -20,7 +20,7 @@ struct DrawerLayoutPage2 {
     .setDrawerWidth(230);
 
   aboutToAppear() {
-    this.model.setDrawerCallback((drawerType, isOpen) => {
+    this.model.setDrawerStateCallback((drawerType, isOpen) => {
       console.debug(`drawerType: ${drawerType}, isOpen: ${isOpen}`)
       // D 0FEFE/JsApp: drawerType: 1, isOpen: true
       // D 0FEFE/JsApp: drawerType: 1, isOpen: false
@@ -81,7 +81,8 @@ struct DrawerLayoutPage2 {
 
   @Builder buildDrawerView() {
     Column() {
-      if (this.model.drawerType == DrawerLayout.Type.LEFT) {
+      // 根据侧边栏类型左右 布局 左右侧边栏
+      if (this.model.getDrawerType() == DrawerLayout.Type.LEFT) {
         Text('这是左边抽屉项\n1.可左右滑动\n2.点击遮罩层关闭')
           .fontSize(30)
           .fontWeight(FontWeight.Bold)
@@ -91,7 +92,7 @@ struct DrawerLayoutPage2 {
           .fontWeight(FontWeight.Bold)
       }
     }
-    .backgroundColor(this.model.drawerType == DrawerLayout.Type.LEFT ? Color.Orange : Color.Green)
+    .backgroundColor(this.model.getDrawerType() == DrawerLayout.Type.LEFT ? Color.Orange : Color.Green)
     .justifyContent(FlexAlign.Center)
     .width('100%')
     .height('100%')

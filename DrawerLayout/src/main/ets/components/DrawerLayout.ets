@@ -17,6 +17,7 @@ export struct DrawerLayout {
   @Link model: DrawerLayout.Model
   @BuilderParam drawerView?: () => any
   @BuilderParam contentView?: () => any
+  @Watch('watchDrawerTypeChange') @State currentDrawerType: DrawerLayout.Type = DrawerLayout.Type.LEFT
 
   // 当设备横屏时条件成立
   private mediaqueryListener = mediaquery.matchMediaSync('(orientation: landscape)');
@@ -32,6 +33,10 @@ export struct DrawerLayout {
       this.initData();
       // 绑定回调函数 绑定当前应用实例
       this.mediaqueryListener.on('change', this.onPortrait.bind(this));
+      // 监听切换左右侧边栏
+      this.model.drawerTypeChangeCallback = (dt: DrawerLayout.Type) => {
+        this.currentDrawerType = dt;
+      }
     })
   }
 
@@ -45,9 +50,33 @@ export struct DrawerLayout {
     if (this.model.onScreenPortraitCallback) {
       this.model.onScreenPortraitCallback(!mediaQueryResult.matches)
     }
+    this.resetData();
+  }
+
+  /**
+   * 观察左右侧边栏是否有变化
+   */
+  watchDrawerTypeChange() {
+    switch (this.currentDrawerType) {
+      case DrawerLayout.Type.LEFT:
+        this.model.drawerPositionX = this.model.drawerWidth * -1;
+        break;
+      case DrawerLayout.Type.RIGHT:
+        this.model.drawerPositionX = this.model.displayWidth;
+        break;
+    }
+  }
+
+  /**
+   * 重置数据
+   */
+  private resetData() {
     this.initData();
   }
 
+  /**
+   * 初始化数据
+   */
   private initData() {
     this.model.displayWidth = DrawerLayout.Utils.getDeviceWidth(this.model.deviceDpi) - (this.model.isScreenPortrait ? 0 : this.model.statusBarHeight);
     this.model.displayHeight = DrawerLayout.Utils.getDeviceHeight(this.model.deviceDpi);
@@ -60,7 +89,7 @@ export struct DrawerLayout {
     }
     // 设置屏幕宽度与侧边栏宽度的差值
     this.model.drawerOffsetWidth = this.model.displayWidth - this.model.drawerWidth;
-    switch (this.model.drawerType) {
+    switch (this.model.getDrawerType()) {
       case DrawerLayout.Type.LEFT:
         this.model.drawerOffsetX = -1 * this.model.drawerWidth / 3;
         break;
@@ -75,7 +104,9 @@ export struct DrawerLayout {
   }
 
   build() {
-    Stack({ alignContent: this.model.drawerType == DrawerLayout.Type.LEFT ? Alignment.TopStart : Alignment.TopEnd }) {
+    Stack({
+      alignContent: this.model.getDrawerType() == DrawerLayout.Type.LEFT ? Alignment.TopStart : Alignment.TopEnd
+    }) {
       // 内容项目
       Column() {
         /*****************************************
@@ -98,12 +129,6 @@ export struct DrawerLayout {
         .onClick(() => {
           this.model.closeDrawer();
         })
-        .animation({
-          duration: 200,
-          curve: Curve.EaseIn,
-          iterations: 1,
-          playMode: PlayMode.Normal,
-        })
       }
 
       // 抽屉项
@@ -114,25 +139,14 @@ export struct DrawerLayout {
         this.drawerView()
         /* ****************************************/
       }
-      //.visibility(this.model.isDrawerViewVisible ? Visibility.Visible : Visibility.Hidden)
       .width(this.model.drawerWidth)
       .height('100%')
       .position({ x: this.model.drawerPositionX, y: 0 })
-      .animation({
-        duration: this.model.drawerAnimDuration,
-        curve: Curve.Linear,
-        iterations: 1,
-        playMode: PlayMode.Normal,
-        onFinish: () => {
-          // 动画结束
-          this.model.isDrawerViewVisible = this.model.isDrawerOpen;
-        }
-      })
       // 手势 左右拖动侧边栏
       .gesture(
         PanGesture({ direction: PanDirection.Left | PanDirection.Right })
           .onActionStart(() => {
-            switch (this.model.drawerType) {
+            switch (this.model.getDrawerType()) {
               case DrawerLayout.Type.LEFT:
                 this.model.drawerPositionX = 0;
                 break;
@@ -141,7 +155,7 @@ export struct DrawerLayout {
             }
           })
           .onActionUpdate((event: GestureEvent) => {
-            switch (this.model.drawerType) {
+            switch (this.model.getDrawerType()) {
               case DrawerLayout.Type.LEFT:
                 if (event.offsetX > 0) {
                   this.model.drawerPositionX = 0;
@@ -163,7 +177,7 @@ export struct DrawerLayout {
             }
           })
           .onActionEnd(() => {
-            switch (this.model.drawerType) {
+            switch (this.model.getDrawerType()) {
               case DrawerLayout.Type.LEFT:
                 if (this.model.drawerPositionX <= this.model.drawerOffsetX) {
                   this.model.closeDrawer();
@@ -182,6 +196,12 @@ export struct DrawerLayout {
           })
       )
       .opacity(this.model.isDrawerViewVisible ? 1 : 0)
+      .shadow({
+        radius: this.model.drawerShadowWidth/2,
+        color: this.model.drawerShadowColor,
+        offsetX: this.model.getDrawerType() == DrawerLayout.Type.LEFT ? this.model.drawerShadowWidth : this.model.drawerShadowWidth * -1,
+        offsetY: 0
+      })
     }
     .width(DrawerLayout.Utils.MATCH_PARENT)
     .height(DrawerLayout.Utils.MATCH_PARENT)
@@ -213,7 +233,7 @@ export namespace DrawerLayout {
     statusBarHeight: number = 0;
 
     // 抽屉类型枚举
-    drawerType: Type = Type.LEFT;
+    private drawerType: Type = Type.LEFT;
     // 侧边栏的宽度
     drawerWidth: number = 260;
     // 滑动多少距离触发动画
@@ -234,19 +254,34 @@ export namespace DrawerLayout {
     // 遮罩层颜色
     maskColor: Color | string | number = Color.Black;
 
+    // 侧边栏阴影效果设置
+    drawerShadowWidth: number = 2;
+    drawerShadowColor: Color | string | Resource = Color.Gray;
+
     // 屏幕是否为竖屏
     isScreenPortrait: boolean = true;
 
     // 侧边栏打开关闭状态回调函数
-    drawerCallback: (drawerType: Type, isOpen: boolean) => void = () => {
+    drawerStateCallback: (drawerType: Type, isOpen: boolean) => void = () => {
     };
     // 屏幕横竖屏切换 竖屏为true,横屏为false
     onScreenPortraitCallback: (isPortrait: boolean) => void = () => {
     };
 
+    // 侧边栏打开关闭状态回调函数
+    drawerTypeChangeCallback: (dt: Type) => void = () => {
+    };
+
     setDrawerType(mDrawerType: Type): Model {
+      if (this.drawerType != mDrawerType) {
+        this.drawerTypeChangeCallback(mDrawerType);
+      }
       this.drawerType = mDrawerType;
       return this;
+    }
+
+    getDrawerType(): Type {
+      return this.drawerType;
     }
 
     setDrawerWidth(mDrawerWidth: number): Model {
@@ -304,8 +339,18 @@ export namespace DrawerLayout {
       return this;
     }
 
-    setDrawerCallback(callback: (drawerType: Type, isOpen: boolean) => void): Model {
-      this.drawerCallback = callback
+    setDrawerShadowWidth(mDrawerShadowWidth: number): Model {
+      this.drawerShadowWidth = mDrawerShadowWidth;
+      return this;
+    }
+
+    setDrawerShadowColor(mDrawerShadowColor: Color | string | Resource): Model {
+      this.drawerShadowColor = mDrawerShadowColor;
+      return this;
+    }
+
+    setDrawerStateCallback(callback: (drawerType: Type, isOpen: boolean) => void): Model {
+      this.drawerStateCallback = callback
       return this
     }
 
@@ -318,55 +363,88 @@ export namespace DrawerLayout {
      * 打开抽屉
      */
     openDrawer() {
-      switch (this.drawerType) {
-        case Type.LEFT:
-          this.drawerPositionX = 0;
-          break;
-        case Type.RIGHT:
-          this.drawerPositionX = this.drawerOffsetWidth;
-          break;
-      }
-      this.isDrawerOpen = true;
-      if (this.drawerCallback) {
-        this.drawerCallback(this.drawerType, true);
-      }
+      this.animateDrawer(() => {
+        switch (this.drawerType) {
+          case Type.LEFT:
+            this.drawerPositionX = 0;
+            break;
+          case Type.RIGHT:
+            this.drawerPositionX = this.drawerOffsetWidth;
+            break;
+        }
+        this.isDrawerOpen = true;
+        this.isDrawerViewVisible = this.isDrawerOpen;
+        if (this.drawerStateCallback) {
+          this.drawerStateCallback(this.drawerType, true);
+        }
+      });
     }
 
     /**
      * 关闭抽屉
      */
     closeDrawer() {
-      switch (this.drawerType) {
-        case Type.LEFT:
-          this.drawerPositionX = this.drawerWidth * -1;
-          break;
-        case Type.RIGHT:
-          this.drawerPositionX = this.displayWidth;
-          break;
-      }
-      this.isDrawerOpen = false;
-      if (this.drawerCallback) {
-        this.drawerCallback(this.drawerType, false);
-      }
+      this.animateDrawer(() => {
+        switch (this.drawerType) {
+          case Type.LEFT:
+            this.drawerPositionX = this.drawerWidth * -1;
+            break;
+          case Type.RIGHT:
+            this.drawerPositionX = this.displayWidth;
+            break;
+        }
+        this.isDrawerOpen = false;
+        this.isDrawerViewVisible = this.isDrawerOpen;
+        if (this.drawerStateCallback) {
+          this.drawerStateCallback(this.drawerType, false);
+        }
+      });
     }
 
     /**
      * 打开或者关闭抽屉
      */
     openOrCloseDrawer() {
-      switch (this.drawerType) {
-        case Type.LEFT:
-          this.drawerPositionX = this.drawerPositionX === 0 ? this.drawerWidth * -1 : 0;
-          this.isDrawerOpen = this.drawerPositionX === 0
-          break;
-        case Type.RIGHT:
-          this.drawerPositionX = this.drawerPositionX === this.drawerOffsetWidth ? this.displayWidth : this.drawerOffsetWidth;
-          this.isDrawerOpen = this.drawerPositionX === this.drawerOffsetWidth
-          break;
-      }
-      if (this.drawerCallback) {
-        this.drawerCallback(this.drawerType, this.isDrawerOpen);
-      }
+      this.animateDrawer(() => {
+        switch (this.drawerType) {
+          case Type.LEFT:
+            this.drawerPositionX = this.drawerPositionX === 0 ? this.drawerWidth * -1 : 0;
+            this.isDrawerOpen = this.drawerPositionX === 0
+            break;
+          case Type.RIGHT:
+            this.drawerPositionX = this.drawerPositionX === this.drawerOffsetWidth ? this.displayWidth : this.drawerOffsetWidth;
+            this.isDrawerOpen = this.drawerPositionX === this.drawerOffsetWidth
+            break;
+        }
+        if (this.drawerStateCallback) {
+          this.drawerStateCallback(this.drawerType, this.isDrawerOpen);
+        }
+        // 动画结束
+        this.isDrawerViewVisible = this.isDrawerOpen;
+      });
+    }
+
+    /**
+     * 侧边栏移动动画
+     * @param event
+     */
+    animateDrawer(event: () => void) {
+      animateTo({
+        duration: this.drawerAnimDuration,
+        curve: Curve.Linear,
+        iterations: 1,
+        playMode: PlayMode.Alternate,
+      }, event)
+    }
+
+    openOrCloseLeftDrawer() {
+      this.setDrawerType(DrawerLayout.Type.LEFT);
+      this.openOrCloseDrawer();
+    }
+
+    openOrCloseRightDrawer() {
+      this.setDrawerType(DrawerLayout.Type.RIGHT);
+      this.openOrCloseDrawer();
     }
   }
 

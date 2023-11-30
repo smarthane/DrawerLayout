@@ -3,14 +3,13 @@
 ## 简介
 > DrawerLayout是基于HarmonyOS，ArkTS语言封装的抽屉（侧边栏）布局组件。
 > （提供左右侧边栏可以显示和隐藏的侧边栏布局组件，通过子组件定义侧边栏和内容区。）
+> 
 ![operation.gif](screenshots/operation2.gif)
 
 ## 下载安装
-> （备注：目前暂未上传到仓库，如需使用可以直接把DrawerLayout模块包中的DrawerLayout/src/main/ets/components/DrawerLayout.ets文件直接复制到对应工程代码中使用）^_^
 ```shell
 ohpm install @smarthane/drawer-layout  
 ```
-
 ## 使用说明
 1. 引入文件及代码依赖
  ```

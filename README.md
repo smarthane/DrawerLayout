@@ -3,19 +3,23 @@
 ## 简介
 > DrawerLayout是基于HarmonyOS，ArkTS语言封装的抽屉（侧边栏）布局组件。
 > （提供左右侧边栏可以显示和隐藏的侧边栏布局组件，通过子组件定义侧边栏和内容区。）
-> 
+>
 ![operation.gif](screenshots/operation2.gif)
 
 ## 下载安装
 ```shell
 ohpm install @smarthane/drawer-layout  
 ```
+
 ## 使用说明
 1. 引入文件及代码依赖
+
  ```
     import { DrawerLayout } from '@smarthane/drawer-layout'
  ```
+
 2. 使用步骤说明
+
  ```
    （1） 创建model
     @State model: DrawerLayout.Model = new DrawerLayout.Model()
@@ -41,8 +45,10 @@ ohpm install @smarthane/drawer-layout
     this.model.openOrCloseDrawer()
  ```
 3. 使用示例
+
+【详细可以参考[工程entry模块下面的示例代码](https://gitee.com/smarthane/drawerlayout/blob/master/entry/src/main/ets/pages/IndexPage.ets)】
+
  ```
-    详细可以参考工程entry模块下面的示例代码。
 
     @Entry
     @Component
@@ -131,6 +137,8 @@ ohpm install @smarthane/drawer-layout
  ```
 
 ## 接口说明
+【详细可以参看[DrawerLayout.ets](https://gitee.com/smarthane/drawerlayout/blob/master/DrawerLayout/src/main/ets/components/DrawerLayout.ets)文件描述】
+
 `@State DrawerLayout.Model = new DrawerLayout.Model();`
 1. 设置侧边栏宽度【默认为260】`model.setDrawerWidth()`
 2. 设置左、右侧边栏【默认为左侧】`model.setDrawerType()`
@@ -139,6 +147,7 @@ ohpm install @smarthane/drawer-layout
 5. 打开或者关闭抽屉`model.openOrCloseDrawer()`
 
 ## 目录结构
+
 ````
 |---- DrawerLayout
 |     |---- entry  # 示例代码文件夹
@@ -150,9 +159,6 @@ ohpm install @smarthane/drawer-layout
 |                             |---- DrawerLayout.ets  # 自定义组件类
 |     |---- README.md  # 安装使用方法                    
 ````
-## 运行示例
-本工程[entry]示例如需要运行在真机，需要替换build-profile.json5文件中的signingConfigs
-[为应用/服务进行签名](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/signing-0000001587684945-V2)
 
 ## 贡献代码
 使用过程中发现任何问题都可以提 [Issue](https://gitee.com/smarthane/drawerlayout/issues) 给我们，当然，我们也非常欢迎你给我们发 [PR](https://gitee.com/openharmony-sig/material-dialogs/pulls) 。

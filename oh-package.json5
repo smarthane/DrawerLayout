@@ -7,6 +7,6 @@
   "name": "drawer-layout",
   "description": "基于ArkTS封装的左右抽屉布局，侧边栏布局组件。提供侧边栏可以显示和隐藏的侧边栏布局组件，通过子组件定义侧边栏和内容区。",
   "main": "",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {}
 }
